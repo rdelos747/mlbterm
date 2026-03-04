@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/raf/Documents/mlbterm/build/_deps/curl-subbuild/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
