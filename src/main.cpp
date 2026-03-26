@@ -23,6 +23,7 @@ Standings* STANDINGS;
 Schedule* SCHEDULE;
 
 void draw() {
+    loga("DRAW");
     STANDINGS->draw();
     SCHEDULE->draw();
     
@@ -34,7 +35,7 @@ void draw() {
     string mid (XMAX - rTime.length(), ' ');
     string bot = rTime + mid;
     wattron(STAT_WIN, WA_STANDOUT);
-    mvwaddnstr(STAT_WIN, YMAX - 1, 0, bot.c_str(), XMAX);
+    mvwaddnstr(STAT_WIN, 0, 0, bot.c_str(), XMAX);
     wattroff(STAT_WIN, WA_STANDOUT);
     wrefresh(STAT_WIN);
 }
@@ -50,7 +51,7 @@ void update() {
     Position all active windows
     */
     STANDINGS->setPos(0);
-    SCHEDULE->setPos(STANDINGS->y);
+    SCHEDULE->setPos(STANDINGS->h);
 }
 
 
@@ -71,6 +72,7 @@ int main(int argc, char* argv[]) {
     
     STAT_WIN = newwin(1, XMAX, YMAX - 1, 0);
     STANDINGS = new Standings(XMAX);
+    SCHEDULE = new Schedule(XMAX);
     
     chrono::time_point now = chrono::high_resolution_clock::now();
     double updateT = 0;
@@ -96,10 +98,11 @@ int main(int argc, char* argv[]) {
             updateT = 1;
             
             R_TIME -= 1;
-            draw();
+            //draw();
             if (R_TIME <= 0) {
                 R_TIME = R_TIME_MAX;
                 //update();
+                draw();
             }
         }
     }

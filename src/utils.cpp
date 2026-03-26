@@ -1,3 +1,7 @@
+#include <sstream>
+
+#include "log.h"
+
 #include "utils.h"
 
 string divName(int id) {
@@ -28,6 +32,19 @@ string teamAbv(string name) {
     return "???";
 }
 
+string dateToTime(string date, int tz) {
+    string t = split(date, 'T')[1];
+    
+    vector<string> sp = split(t, ':');
+    int hour = (stoi(sp[0]) + tz);
+    if (hour < 0) {
+        hour = 24 + hour;
+    }
+    int minute = stoi(sp[1]);
+    
+    return to_string(hour) + ":" + to_string(minute);
+}
+
 string lpad(int n, string s) {
     if (s.length() < n) {
         string p (n - s.length(), ' ');
@@ -42,4 +59,14 @@ string rpad(int n, string s) {
         return s + p;
     }
     return s;
+}
+
+vector<string> split(string input, char delim) {
+    vector<string> out;
+    string line;
+    stringstream stream(input);
+    while(getline(stream, line, delim)) {
+        out.push_back(line);
+    }
+    return out;
 }
