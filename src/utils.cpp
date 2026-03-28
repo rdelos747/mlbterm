@@ -40,9 +40,13 @@ string dateToTime(string date, int tz) {
     if (hour < 0) {
         hour = 24 + hour;
     }
-    int minute = stoi(sp[1]);
     
-    return to_string(hour) + ":" + to_string(minute);
+    string minute = to_string(stoi(sp[1]));
+    if (minute.length() < 2) {
+        minute = "0" + minute;
+    }
+    
+    return to_string(hour) + ":" + minute;
 }
 
 string lpad(int n, string s) {

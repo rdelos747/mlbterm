@@ -2,9 +2,12 @@
 
 #include "Schedule.h"
 
-Schedule::Schedule(int nw) {
+Schedule::Schedule(int nw, int utm) {
     w = nw;
     win = newwin(1, w, 0, 0);
+    redraw = false;
+    upt = 0;
+    upt_m = utm;
 }
 
 Schedule::~Schedule() {
@@ -13,6 +16,11 @@ Schedule::~Schedule() {
 }
 
 void Schedule::draw() {
+    if (!redraw) {
+        return;
+    }
+    redraw = false;
+    
     wclear(win);
     
     /*
@@ -64,6 +72,13 @@ void Schedule::draw() {
 }
 
 void Schedule::update() {
+    if (upt > 0) {
+        upt--;
+        return;
+    }
+    upt = upt_m;
+    redraw = true;
+    
     log("Fetching Schedule");
     cpr::Url url = "https://statsapi.mlb.com/api/v1/schedule?sportId=1";
     cpr::Response resp = cpr::Get(url);
@@ -78,7 +93,6 @@ void Schedule::update() {
         h += data["dates"][0]["games"].size();
     }
     wresize(win, h, w);
-    
 }
 
 void Schedule::setPos(int ny) {

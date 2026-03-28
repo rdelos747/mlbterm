@@ -71,15 +71,15 @@ int main(int argc, char* argv[]) {
     loga(to_string(XMAX), to_string(YMAX));
     
     STAT_WIN = newwin(1, XMAX, YMAX - 1, 0);
-    STANDINGS = new Standings(XMAX);
-    SCHEDULE = new Schedule(XMAX);
+    STANDINGS = new Standings(XMAX, 10);
+    SCHEDULE = new Schedule(XMAX, 10);
     
     chrono::time_point now = chrono::high_resolution_clock::now();
     double updateT = 0;
     
     bool running = true;
     
-    update();
+    //update();
     
     while(running) {
         chrono::time_point old = now;
@@ -98,13 +98,16 @@ int main(int argc, char* argv[]) {
             updateT = 1;
             
             R_TIME -= 1;
-            //draw();
+            update();
+            draw();
             if (R_TIME <= 0) {
                 R_TIME = R_TIME_MAX;
                 //update();
-                draw();
+                //draw();
             }
         }
+        
+        napms(50);
     }
     
     log("===== CLOSING MLB TERM =====");

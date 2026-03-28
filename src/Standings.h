@@ -15,7 +15,7 @@ using Json = nlohmann::json;
 
 class Standings {
 public:
-    Standings(int nw);
+    Standings(int nw, int utm);
     ~Standings();
     
     void update();
@@ -25,6 +25,9 @@ public:
     int x, y;
     int w, h;
     Json data;
+    bool redraw;
+    int upt;
+    int upt_m;
     
 private:
     WINDOW* win;

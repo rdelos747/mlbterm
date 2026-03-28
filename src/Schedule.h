@@ -15,7 +15,7 @@ using Json = nlohmann::json;
 
 class Schedule {
 public:
-    Schedule(int nw);
+    Schedule(int nw, int utm);
     ~Schedule();
     
     void update();
@@ -25,6 +25,9 @@ public:
     int x, y;
     int w, h;
     Json data;
+    bool redraw;
+    int upt;
+    int upt_m;
     
 private:
     WINDOW* win;
