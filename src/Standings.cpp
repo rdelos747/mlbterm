@@ -25,7 +25,7 @@ void Standings::draw() {
     wclear(win);
     
     /*
-    Title
+    Titlee
     */
     string titleT = "STANDINGS";
     string tPad (w - titleT.length(), ' ');
@@ -37,25 +37,46 @@ void Standings::draw() {
     for(size_t j = 0; j < data["records"].size(); j++) {
         const auto& r = data["records"][j];
         
-        int ox = int(j / 3) * 35;
+        int ox = int(j / 3) * 31;
         int oy = j % 3 * 6 + 1;
         
         /*
         Division title bar
         */
-        string divRow =     rpad(4, divAbv(r["division"]["id"])) + 
-                            rpad(7, "WL") + 
+        //string divRow =     rpad(4, divAbv(r["division"]["id"])) + 
+        //                    rpad(7, "WL") + 
+        //                    rpad(5, "GB") +
+        //                    rpad(6, "WGB") +
+        //                    rpad(4, "LRD") +
+        //                    rpad(4, "L10");
+                            
+        string divRow =     rpad(7, "WL") + 
                             rpad(5, "GB") +
                             rpad(6, "WGB") +
                             rpad(4, "LRD") +
-                            rpad(4, "L10W");
+                            rpad(4, "L10");
+        
+        wattron(win, WA_STANDOUT);
+        //wattron(win, WA_UNDERLINE);
         mvwaddnstr(
             win, 
             oy,
             ox, 
+            divAbv(r["division"]["id"]).c_str(), 
+            w
+        );
+        wattroff(win, WA_STANDOUT);
+        
+        //wattron(win, WA_UNDERLINE);
+        mvwaddnstr(  
+            win, 
+            oy,
+            ox + 4, 
             divRow.c_str(), 
             w
-        );  
+        );
+        wattroff(win, WA_UNDERLINE);
+        
         
         for (size_t i = 0; i < r["teamRecords"].size(); i++) {
             /*
