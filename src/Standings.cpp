@@ -2,30 +2,24 @@
 
 #include "Standings.h"
 
-Standings::Standings(int nw, int utm) {
-    w = nw;
-    win = newwin(19, w, 0, 0);
-    redraw = false;
-    h = 19;
-    upt = 0;
-    upt_m = utm;
+Standings::Standings(int utm) : Window(utm) {
+    setH(19);
 }
 
 Standings::~Standings() {
     log("Deleting Standings");
-    delwin(win);
 }
 
-void Standings::draw() {
-    if (!redraw) {
-        return;
-    }
-    redraw = false;
+void Standings::_draw() {
+    //if (!redraw) {
+    //    return;
+    //}
+    //redraw = false;
     
     wclear(win);
     
     /*
-    Titlee
+    Title
     */
     string titleT = "STANDINGS";
     string tPad (w - titleT.length(), ' ');
@@ -118,23 +112,11 @@ void Standings::draw() {
     wrefresh(win);
 }
 
-void Standings::update() {
-    if (upt > 0) {
-        upt--;
-        return;
-    }
-    upt = upt_m;
-    redraw = true;
-    
+void Standings::_update() { 
     log("Fetching Standings");
     cpr::Url url = "https://statsapi.mlb.com/api/v1/standings?leagueId=103,104";
     cpr::Response resp = cpr::Get(url);
     loga("Standings Status", to_string(resp.status_code));
     //log(resp.text);
     data = Json::parse(resp.text);
-}
-
-void Standings::setPos(int ny) {
-    y = ny;
-    mvwin(win, y, x);
 }

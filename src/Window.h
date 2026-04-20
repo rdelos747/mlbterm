@@ -16,14 +16,19 @@ using Json = nlohmann::json;
 
 class Window {
 public:
-    Window(int nw, int utm);
+    Window(int utm);
     ~Window();
     
     
     void draw();
     void update();
+    virtual void _draw() = 0;
+    virtual void _update() = 0;
+    
     void setX(int nx);
     void setY(int ny);
+    void setW(int nw);
+    void setH(int nh);
     
     int x, y;
     int w, h;
@@ -34,7 +39,7 @@ public:
     bool redraw;
     
 
-private:
+protected:
     WINDOW* win;
 };
 

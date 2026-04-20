@@ -9,28 +9,18 @@
 #include <vector>
 
 #include "log.h"
+#include "Window.h"
 
 using namespace std;
 using Json = nlohmann::json;
 
-class Standings {
+class Standings : public Window {
 public:
-    Standings(int nw, int utm);
+    Standings(int utm);
     ~Standings();
     
-    void update();
-    void draw();
-    void setPos(int ny);
-    
-    int x, y;
-    int w, h;
-    Json data;
-    bool redraw;
-    int upt;
-    int upt_m;
-    
-private:
-    WINDOW* win;
+    void _update();
+    void _draw();
 };
 
 #endif

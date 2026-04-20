@@ -113,5 +113,6 @@ string dateToTime(string date, int tz = -4);
 string lpad(int n, string s);
 string rpad(int n, string s);
 vector<string> split(string input, char delim);
+string formatHalf(string h);
 
 #endif

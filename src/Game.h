@@ -1,5 +1,5 @@
-#ifndef SCHEDULE_H
-#define SCHEDULE_H
+#ifndef GAME_H
+#define GAME_H
 
 #include <cpr/cpr.h>
 #include <ncurses.h>
@@ -14,13 +14,21 @@
 using namespace std;
 using Json = nlohmann::json;
 
-class Schedule : public Window {
+enum GMODE {
+    MIN
+};
+
+
+class Game : public Window {
 public:
-    Schedule(int utm);
-    ~Schedule();
+    Game(int utm, string id);
+    ~Game();
     
     void _update();
     void _draw();
+
+    string id;
+    GMODE mode;
 };
 
 #endif

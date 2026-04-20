@@ -4,7 +4,9 @@
 #include <ncurses.h>
 #include <panel.h>
 #include <unistd.h>
+#include <vector>
 
+#include "Game.h"
 #include "log.h"
 #include "Schedule.h"
 #include "Standings.h"
@@ -22,10 +24,13 @@ int R_TIME_MAX = 10;
 Standings* STANDINGS;
 Schedule* SCHEDULE;
 
+vector<Window*> WINDOWS;
+
 void draw() {
     loga("DRAW");
-    STANDINGS->draw();
-    SCHEDULE->draw();
+    for (Window* w : WINDOWS) {
+        w->draw();
+    }
     
     /*
     Draw bottom bar
@@ -41,17 +46,14 @@ void draw() {
 }
 
 void update() {
-    /*
-    Update all active windows
-    */
-    STANDINGS->update();
-    SCHEDULE->update();
-    
-    /*
-    Position all active windows
-    */
-    STANDINGS->setPos(0);
-    SCHEDULE->setPos(STANDINGS->h);
+    Window* prev;
+    for (Window* w : WINDOWS) {
+        w->update();
+        if (prev != nullptr) {
+            w->setY(prev->y + prev->h);
+        }
+        prev = w;
+    }
 }
 
 
@@ -71,15 +73,25 @@ int main(int argc, char* argv[]) {
     loga(to_string(XMAX), to_string(YMAX));
     
     STAT_WIN = newwin(1, XMAX, YMAX - 1, 0);
-    STANDINGS = new Standings(XMAX, 10);
-    SCHEDULE = new Schedule(XMAX, 10);
+    STANDINGS = new Standings(10);
+    STANDINGS->setW(XMAX);
+    STANDINGS->setX(0);
+    WINDOWS.push_back(STANDINGS);
+    
+    SCHEDULE = new Schedule(10);
+    SCHEDULE->setW(XMAX);
+    SCHEDULE->setX(0);
+    WINDOWS.push_back(SCHEDULE);
+    
+    Game* g = new Game(10, to_string(823475));
+    g->setW(XMAX);
+    g->setX(0);
+    WINDOWS.push_back(g);
     
     chrono::time_point now = chrono::high_resolution_clock::now();
     double updateT = 0;
     
     bool running = true;
-    
-    //update();
     
     while(running) {
         chrono::time_point old = now;
@@ -111,8 +123,12 @@ int main(int argc, char* argv[]) {
     }
     
     log("===== CLOSING MLB TERM =====");
-    delete STANDINGS;
-    delete SCHEDULE;
+    //delete STANDINGS;
+    //delete SCHEDULE;
+    for (Window* w : WINDOWS) {
+        delete w;
+    }
+    
     delwin(STAT_WIN);
     endwin();
 }

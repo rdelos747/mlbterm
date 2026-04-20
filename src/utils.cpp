@@ -74,3 +74,8 @@ vector<string> split(string input, char delim) {
     }
     return out;
 }
+
+string formatHalf(string h) {
+    if (h == "Bottom") return "Bot";
+    return h;
+}

@@ -2,24 +2,19 @@
 
 #include "Schedule.h"
 
-Schedule::Schedule(int nw, int utm) {
-    w = nw;
-    win = newwin(1, w, 0, 0);
-    redraw = false;
-    upt = 0;
-    upt_m = utm;
-}
+Schedule::Schedule(int utm) : Window(utm) {}
 
 Schedule::~Schedule() {
     log("Deleting Schedule");
     delwin(win);
 }
 
-void Schedule::draw() {
-    if (!redraw) {
-        return;
-    }
-    redraw = false;
+void Schedule::_draw() {
+    //if (!redraw) {
+    //    return;
+    //}
+    //redraw = false;
+    //
     
     wclear(win);
     
@@ -71,19 +66,19 @@ void Schedule::draw() {
     wrefresh(win);
 }
 
-void Schedule::update() {
-    if (upt > 0) {
-        upt--;
-        return;
-    }
-    upt = upt_m;
-    redraw = true;
+void Schedule::_update() {
+    //if (upt > 0) {
+    //    upt--;
+    //    return;
+    //}
+    //upt = upt_m;
+    //redraw = true;
     
     log("Fetching Schedule");
     cpr::Url url = "https://statsapi.mlb.com/api/v1/schedule?sportId=1";
     cpr::Response resp = cpr::Get(url);
     loga("Schedule Status", to_string(resp.status_code));
-    loga(resp.text);
+    //loga(resp.text);
     if (resp.status_code == 200) {
         data = Json::parse(resp.text);
     }
@@ -93,9 +88,4 @@ void Schedule::update() {
         h += data["dates"][0]["games"].size();
     }
     wresize(win, h, w);
-}
-
-void Schedule::setPos(int ny) {
-    y = ny;
-    mvwin(win, y, x);
 }
