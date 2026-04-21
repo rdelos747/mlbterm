@@ -15,7 +15,8 @@ using namespace std;
 using Json = nlohmann::json;
 
 enum GMODE {
-    MIN
+    LIN,
+    BUG
 };
 
 

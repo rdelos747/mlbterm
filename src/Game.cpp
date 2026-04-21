@@ -4,7 +4,7 @@
 
 Game::Game(int utm, string nid) : Window(utm) {
     id = nid;
-    mode = MIN;
+    mode = LIN;
 }
 
 Game::~Game() {
@@ -156,7 +156,7 @@ void Game::_update() {
     
     loga(data["liveData"]["linescore"].dump());
     
-    if (mode == MIN) {
+    if (mode == LIN) {
         h = 4;
     }
     setH(h);

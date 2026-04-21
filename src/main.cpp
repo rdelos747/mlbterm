@@ -1,8 +1,10 @@
 #include <chrono>
 #include <cpr/cpr.h>
+#include <format>
 #include <nlohmann/json.hpp>
 #include <ncurses.h>
 #include <panel.h>
+#include <stdexcept>
 #include <unistd.h>
 #include <vector>
 
@@ -25,6 +27,15 @@ Standings* STANDINGS;
 Schedule* SCHEDULE;
 
 vector<Window*> WINDOWS;
+
+//set<string> AUTO_LINES;
+//set<string> AUTO_BUGS;
+
+
+map<string, GMODE> WATCHING;
+string ON_FIN = "NONE"; // how to handle game on finish
+bool SCH_CLEAR = true;  // remove active game from sch
+bool HIDE_SCR = false;  // hide score
 
 void draw() {
     loga("DRAW");
@@ -56,10 +67,75 @@ void update() {
     }
 }
 
+bool parseArgs(int argc, char* argv[]) {
+    loga("PARSING ARGS");
+    if (argc == 1) {
+        return true;
+    }
+    
+    string error = "";
+    
+    for(int i = 1; i < argc; i++) {
+        vector<string> s = split(argv[i], '=');
+        
+        if (s[0] == "hidescore" || s[0] == "-hs") {
+            HIDE_SCR = true;
+        }
+        else if (   s[0] == "scheduleautoclear" || 
+                    s[0] == "-sac") {
+            SCH_CLEAR = true;
+        }
+        else if (   s[0] == "onfinish" || 
+                    s[0] == "-of") {
+            if (s[1] == "close") {
+                ON_FIN = "CLOSE";
+            }
+            else if (s[1] == "line") {
+                ON_FIN = "LINE";
+            }
+            else if (s[1] == "none") {
+                ON_FIN = "NONE";
+            }
+            else {
+                error = format(
+                    "COMMAND {} INVALID ARGUMENT {}", 
+                    s[0], 
+                    s[1]
+                );
+            }
+        }
+        else if (   s[0] == "line" ||
+                    s[0] == "-l") {
+            vector<string> lines = split(s[1], ',');
+        }
+        else if (   s[0] == "bug" ||
+                    s[0] == "-b") {
+            
+        } 
+        else {
+            error = format(
+                "UNKNOWN COMMAND: {}",
+                s[0]
+            );
+        }
+    }
+    
+    if (error != "") {
+        cout << error << '\n';
+        return false;
+    }
+    
+    return true;   
+}
+
 
 int main(int argc, char* argv[]) {
     clearLog();
     log("===== STARTING MLB TERM =====");
+    
+    if (!parseArgs(argc, argv)) {
+        return 0;
+    }
     
     initscr();
     curs_set(0);
@@ -83,10 +159,12 @@ int main(int argc, char* argv[]) {
     SCHEDULE->setX(0);
     WINDOWS.push_back(SCHEDULE);
     
+    /*
     Game* g = new Game(10, to_string(823475));
     g->setW(XMAX);
     g->setX(0);
     WINDOWS.push_back(g);
+    */
     
     chrono::time_point now = chrono::high_resolution_clock::now();
     double updateT = 0;

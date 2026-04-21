@@ -10,12 +10,6 @@ Schedule::~Schedule() {
 }
 
 void Schedule::_draw() {
-    //if (!redraw) {
-    //    return;
-    //}
-    //redraw = false;
-    //
-    
     wclear(win);
     
     /*
@@ -32,11 +26,18 @@ void Schedule::_draw() {
         return;
     }
     
+    string ltime = "";
     for (size_t j = 0; j < data["dates"][0]["games"].size(); j++) {
         const auto& g = data["dates"][0]["games"][j];
         
         string stat = g["status"]["codedGameState"];
         string time = dateToTime(g["gameDate"]);
+        if (time == ltime) {
+            time = "";
+        }
+        else {
+            ltime = time;
+        }
         
         const auto& ta = g["teams"]["away"];
         const auto& th = g["teams"]["home"];
@@ -67,13 +68,6 @@ void Schedule::_draw() {
 }
 
 void Schedule::_update() {
-    //if (upt > 0) {
-    //    upt--;
-    //    return;
-    //}
-    //upt = upt_m;
-    //redraw = true;
-    
     log("Fetching Schedule");
     cpr::Url url = "https://statsapi.mlb.com/api/v1/schedule?sportId=1";
     cpr::Response resp = cpr::Get(url);
